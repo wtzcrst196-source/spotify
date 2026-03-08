@@ -30,6 +30,24 @@
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 <style>
+<div class="fixed bottom-0 left-0 w-full bg-black border-t border-gray-800 flex justify-around py-3">
+
+<button onclick="showPage('home')" class="text-white text-xs flex flex-col items-center">
+<span class="material-symbols-outlined">home</span>
+Home
+</button>
+
+<button onclick="showPage('search')" class="text-white text-xs flex flex-col items-center">
+<span class="material-symbols-outlined">search</span>
+Search
+</button>
+
+<button onclick="showPage('library')" class="text-white text-xs flex flex-col items-center">
+<span class="material-symbols-outlined">library_music</span>
+Library
+</button>
+
+</div>        
     body {
       min-height: max(884px, 100dvh);
     }
@@ -225,3 +243,26 @@
 </div>
 </div>
 </body></html>
+<div id="homePage">
+
+<h2 class="text-xl font-bold p-4">Recently Played</h2>
+
+<div id="recentSongs" class="grid grid-cols-2 gap-4 p-4"></div>
+
+</div>
+
+<div id="searchPage" class="hidden">
+
+<input id="searchInput" placeholder="Search music..." class="w-full p-3 bg-gray-900 text-white"/>
+
+<div id="searchResults"></div>
+
+</div>
+
+<div id="libraryPage" class="hidden">
+
+<h2 class="text-xl font-bold p-4">Your Library</h2>
+
+<div id="playlist"></div>
+
+</div>
