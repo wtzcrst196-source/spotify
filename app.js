@@ -1,39 +1,64 @@
-function showPage(page){
+const uploadMusic = document.getElementById("uploadMusic")
 
-document.getElementById("homePage").classList.add("hidden")
-document.getElementById("searchPage").classList.add("hidden")
-document.getElementById("libraryPage").classList.add("hidden")
+const library = document.getElementById("library")
 
-if(page==="home"){
-document.getElementById("homePage").classList.remove("hidden")
-}
-
-if(page==="search"){
-document.getElementById("searchPage").classList.remove("hidden")
-}
-
-if(page==="library"){
-document.getElementById("libraryPage").classList.remove("hidden")
-}
-
-}
 const searchInput = document.getElementById("searchInput")
 
-searchInput.addEventListener("input",()=>{
+function renderLibrary(){
 
-let query = searchInput.value.toLowerCase()
+library.innerHTML=""
 
-let results = songs.filter(song =>
-song.title.toLowerCase().includes(query)
-)
+songs.forEach((song,i)=>{
 
-renderResults(results)
+let div=document.createElement("div")
+
+div.textContent=song.title
+
+div.onclick=()=>{
+
+currentSong=i
+
+loadSong(i)
+
+audio.play()
+
+}
+
+library.appendChild(div)
 
 })
 
-function renderResults(results){
+}
 
-const container = document.getElementById("searchResults")
+uploadMusic.addEventListener("change",(e)=>{
+
+const files=e.target.files
+
+for(let file of files){
+
+songs.push({
+
+title:file.name,
+
+src:URL.createObjectURL(file)
+
+})
+
+}
+
+renderLibrary()
+
+savePlaylist()
+
+})
+
+searchInput.addEventListener("input",()=>{
+
+let query=searchInput.value.toLowerCase()
+
+let results=songs.filter(song=>song.title.toLowerCase().includes(query))
+
+const container=document.getElementById("searchResults")
 
 container.innerHTML=""
 
@@ -47,38 +72,26 @@ container.appendChild(div)
 
 })
 
-}
+})
+
 function savePlaylist(){
 
-localStorage.setItem("playlist", JSON.stringify(songs))
+localStorage.setItem("playlist",JSON.stringify(songs))
 
 }
 
 function loadPlaylist(){
 
-let data = localStorage.getItem("playlist")
+let data=localStorage.getItem("playlist")
 
 if(data){
 
-songs = JSON.parse(data)
+songs=JSON.parse(data)
+
+renderLibrary()
 
 }
 
-}const uploadMusic = document.getElementById("uploadMusic")
-
-uploadMusic.addEventListener("change",(e)=>{
-
-const files = e.target.files
-
-for(let file of files){
-
-songs.push({
-title:file.name,
-src:URL.createObjectURL(file)
-})
-
 }
 
-savePlaylist()
-
-})
+loadPlaylist()
