@@ -1,268 +1,67 @@
 <!DOCTYPE html>
+<html>
+<head>
 
-<html class="dark" lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "primary": "#4725f4",
-                        "background-light": "#f6f8f7",
-                        "background-dark": "#122017",
-                    },
-                    fontFamily: {
-                        "display": ["Spline Sans"]
-                    },
-                    borderRadius: {"DEFAULT": "0.5rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
-                },
-            },
-        }
-    </script>
-<style>
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    </style>
-<style>
-<div class="fixed bottom-0 left-0 w-full bg-black border-t border-gray-800 flex justify-around py-3">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<button onclick="showPage('home')" class="text-white text-xs flex flex-col items-center">
-<span class="material-symbols-outlined">home</span>
-Home
-</button>
+<script src="https://cdn.tailwindcss.com"></script>
 
-<button onclick="showPage('search')" class="text-white text-xs flex flex-col items-center">
-<span class="material-symbols-outlined">search</span>
-Search
-</button>
+<title>Spotify Clone</title>
 
-<button onclick="showPage('library')" class="text-white text-xs flex flex-col items-center">
-<span class="material-symbols-outlined">library_music</span>
-Library
-</button>
-
-</div>        
-    body {
-      min-height: max(884px, 100dvh);
-    }
-  </style>
 </head>
-<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased">
-<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
-<!-- Header -->
-<header class="sticky top-0 z-10 flex items-center justify-between bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md p-4">
-<h1 class="text-2xl font-bold tracking-tight">Good evening</h1>
-<div class="flex items-center gap-4">
-<button class="flex h-10 w-10 items-center justify-center rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors">
-<span class="material-symbols-outlined text-2xl">notifications</span>
-</button>
-<button class="flex h-10 w-10 items-center justify-center rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors">
-<span class="material-symbols-outlined text-2xl">history</span>
-</button>
-<button class="flex h-10 w-10 items-center justify-center rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors">
-<span class="material-symbols-outlined text-2xl">settings</span>
-</button>
-</div>
-</header>
-<main class="flex-1 pb-24">
-<!-- Recently Played (2-column grid) -->
-<section class="px-4 py-2">
-<div class="grid grid-cols-2 gap-3">
-<div class="group relative flex items-center gap-3 overflow-hidden rounded-lg bg-slate-200/50 dark:bg-slate-800/50 hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors cursor-pointer">
-<div class="h-14 w-14 flex-shrink-0 bg-cover bg-center" data-alt="Album art with neon vibrant colors" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD2XTIvCgqJLlIMY-c_JWapLs8hGG2tsG4M8TBP5HvGKSlfuA_CS0pq1BmW7hC5xIwWKLVCT0Icg8FwxOugeb1yp0C7ChDrWYRVswi_zwkJ-Kr1omu68NPjtRPCI7WWdPdWnvxiCcQ6NEGXKmrFTy7GJ0446hqX5y-FfVz6TJaDDDFWJB-5xfMRXOMQQiSIrO7daOBObYt-gdi7fPq4OfjlYZAonCxSc9YuW-oSq3HM8Ej-cUQ9TqstbJMse93McRNlRPQDuvE2')"></div>
-<p class="text-sm font-bold line-clamp-2 pr-2">Liked Songs</p>
-</div>
-<div class="group relative flex items-center gap-3 overflow-hidden rounded-lg bg-slate-200/50 dark:bg-slate-800/50 hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors cursor-pointer">
-<div class="h-14 w-14 flex-shrink-0 bg-cover bg-center" data-alt="Abstract music production studio equipment" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBqo031O08y9VsKB83vetd6dD7_keoWKcrVGjgMceWrwWcHWqHwwv18GhyeISOdKt5A9R8EjxN4ms3Knd6BC1XJJCHncty0HiYPI5-C4w1XyH9fW8fPND9Ct6gbepoj41d--sHHtkePkOt3u0KmYhtqJ5kZ56Yi65P9NM3CgMehcQYbT_4w3zR1FC6ur3dPjXME2OxRZbamt7YUYwx97SQ3iGEia3jMwoaJAkSg2SQxJkgwOeAeaEBA75mYwbaxhA-ZCyno3u45')"></div>
-<p class="text-sm font-bold line-clamp-2 pr-2">Techno Bunker</p>
-</div>
-<div class="group relative flex items-center gap-3 overflow-hidden rounded-lg bg-slate-200/50 dark:bg-slate-800/50 hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors cursor-pointer">
-<div class="h-14 w-14 flex-shrink-0 bg-cover bg-center" data-alt="Microphone on stage with blue lights" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDJwRC596krGvrwzJBAksD2rXTM9pkHEdqc2f86ozcoGFqcxnyYNtfdFIGmIFPs-bvQAzBntlAZau-HjQ50uCrB7v-0ZV83uNgCXWXb-8lAH6acpNfKlOWcAaFf7qLQHRXcZnEuUzkgOxpLANqKmIdYV3_9NUEiJFb8aH2ZB5SZ3NzMSUJpknH9shTxnIQYypEOoq1_WWXzdjGLcE2TLYB7_oz8rZSPbh6K8Pbt4-R92XJ-fPEG3BKo2mpendp-clt8Wx7Rg5eF')"></div>
-<p class="text-sm font-bold line-clamp-2 pr-2">Discover Weekly</p>
-</div>
-<div class="group relative flex items-center gap-3 overflow-hidden rounded-lg bg-slate-200/50 dark:bg-slate-800/50 hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors cursor-pointer">
-<div class="h-14 w-14 flex-shrink-0 bg-cover bg-center" data-alt="Headphones lying on a wooden table" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCC6RgmNlQE37N66uN8LJjhq9SjZVF3gJieXYeNmBLFRGHBovGkaBlOP52Y1PZe_eIBlfYmwvwCYtZgWqxiNk0wt3fdE2jsio4gNTlnbTUxGwGjmkw-RvDEmVtJYwkxeo3ZwfYxbQfjryRyt34EUWDXqQA45V833_JkqVDHXts8J1hB6ViTNLHIc1LnyivWIqZTA5pJYBR2NdGmcwn_5d7txfdC5v1lrhEbOQENPbAi7kSf6OVoohvJHlh-9aI_VWbuX3Q29qWc')"></div>
-<p class="text-sm font-bold line-clamp-2 pr-2">Daily Mix 1</p>
-</div>
-<div class="group relative flex items-center gap-3 overflow-hidden rounded-lg bg-slate-200/50 dark:bg-slate-800/50 hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors cursor-pointer">
-<div class="h-14 w-14 flex-shrink-0 bg-cover bg-center" data-alt="Silhouettes at a music concert festival" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBpyo4QLdr0bXYz_roq6PpNiN3pxv6zCbZPTczFOpDYqLbpc47MLQtqJ1hTGOltbzAZqKNnb6-PvKtiuppdmNi72ADKuPDDn4SndCeEkjp7ODcwSInqIvzIuBIycGwTy9AtkM4sFvB_ze9MYyI8vPo18EMjyAWzDZpSR5PbXct6ereYuOe7L0xplAzpnDLUb6LrI_RzPl0OMm7hCQUDoogQgLHawPdV1JJWTETDYAlyutGttjk1nc02qti3-T-4NSmI_7CpkixH')"></div>
-<p class="text-sm font-bold line-clamp-2 pr-2">Release Radar</p>
-</div>
-<div class="group relative flex items-center gap-3 overflow-hidden rounded-lg bg-slate-200/50 dark:bg-slate-800/50 hover:bg-slate-300 dark:hover:bg-slate-700 transition-colors cursor-pointer">
-<div class="h-14 w-14 flex-shrink-0 bg-cover bg-center" data-alt="Guitar player close up during performance" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBI0L5sD0m8C78yVACbS20T2SwXBFNRl2pOfMBMByVKSWovrz6tLVAZqDx3E35w_uEIo4yPad5E1vC_EmQCN32o6DZqsWZicGkZHDljv5e10dyYwMGHcAT3WKJ0fjFF31EbM-W5UeldvCthJkm_W8N3DNvkaT4TgfNgxN7HMaVyuiPAxYVNeJFNzGOJAN7ZWreb4duQo7yzMWtcIikyrh5X08CgWiZ0C_UsIz19BC6ooJndDp57V6Sh3umFCoQGQ8Qzoic7EOTe')"></div>
-<p class="text-sm font-bold line-clamp-2 pr-2">Lo-Fi Beats</p>
-</div>
-</div>
-</section>
-<!-- Made For You -->
-<section class="mt-8">
-<div class="flex items-center justify-between px-4 mb-4">
-<h2 class="text-xl font-bold">Made For You</h2>
-<span class="text-sm font-semibold text-slate-500 hover:text-primary cursor-pointer">Show all</span>
-</div>
-<div class="no-scrollbar flex gap-4 overflow-x-auto px-4">
-<div class="flex min-w-[160px] flex-col gap-2 rounded-xl bg-slate-200/20 dark:bg-slate-800/20 p-3 hover:bg-slate-200/40 dark:hover:bg-slate-800/40 transition-colors cursor-pointer group">
-<div class="relative aspect-square w-full overflow-hidden rounded-lg shadow-lg">
-<img class="h-full w-full object-cover" data-alt="Colorful abstract geometric art cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsnhA30LkX3RgTLH8LzF31zrrewQJzETAjuvDXcI8K926i63rggRD5EDdaw_Nqkf8zNpkDz-Vy2mFU0cPB1ZO3rTe1D31cvE-NBBytLzyzEOdDmLmc9kbTKnqufMKQIIYwwFkBGZb2He4923PHRBb94MfpyzaR7RJoAldWWrnoVahh0gKH3DD-xc4ZOmljVWKZwH_CH4L8UgCYfWgGgyDoyYt5-FpStV7eeT5lwUV9pC9aVCkgrZZkYbxc94nbVaA1wHrrDpre"/>
-<button class="absolute bottom-2 right-2 flex h-10 w-10 items-center justify-center rounded-full bg-primary text-white opacity-0 shadow-xl group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all">
-<span class="material-symbols-outlined fill-1">play_arrow</span>
-</button>
-</div>
-<h3 class="font-bold text-sm">Discover Weekly</h3>
-<p class="text-xs text-slate-500 line-clamp-2">Your weekly mixtape of fresh music.</p>
-</div>
-<div class="flex min-w-[160px] flex-col gap-2 rounded-xl bg-slate-200/20 dark:bg-slate-800/20 p-3 hover:bg-slate-200/40 dark:hover:bg-slate-800/40 transition-colors cursor-pointer group">
-<div class="relative aspect-square w-full overflow-hidden rounded-lg shadow-lg">
-<img class="h-full w-full object-cover" data-alt="Atmospheric landscape with purple lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMGKziqyxyFaXqRDxD_4rttEdazUOSGs-kL7tauRHmO7ucXKhKOG3zlcIzRRve3jYFZ-MrJCxDEuE0RrNA7eYSjjkmKNvwTkDVRpfbr5BaYwuQpLTlhw7LeFbCKV9e7IOCrO5B0Hon25GGW2qI1Ye3eJdHKPl5lbnA9EVw-dfrSVkkpypm0AjQrSaknS6FhdId_gu_bGINcT-VvBoUxMk2TANAiJT_PLklXbftmhkC7HnQ23h3bMc9rJLuhONm5sT4QqXWfcLn"/>
-<button class="absolute bottom-2 right-2 flex h-10 w-10 items-center justify-center rounded-full bg-primary text-white opacity-0 shadow-xl group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all">
-<span class="material-symbols-outlined fill-1">play_arrow</span>
-</button>
-</div>
-<h3 class="font-bold text-sm">Daily Mix 1</h3>
-<p class="text-xs text-slate-500 line-clamp-2">Radiohead, Tame Impala and more.</p>
-</div>
-<div class="flex min-w-[160px] flex-col gap-2 rounded-xl bg-slate-200/20 dark:bg-slate-800/20 p-3 hover:bg-slate-200/40 dark:hover:bg-slate-800/40 transition-colors cursor-pointer group">
-<div class="relative aspect-square w-full overflow-hidden rounded-lg shadow-lg">
-<img class="h-full w-full object-cover" data-alt="Abstract watercolor textures in blue" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAFwAS_0Jah5eeOirvuuadqSZAs8bXn9a2512EB_OhiIcU5wkVH02ANk_7W_iL0kqOljjxY_4Gm00_76CUjjk6w9svctcruMWqgfgPEtP0H-X_tdzgLE7w8IcAE1PLooU4svliYvVpkh6_BH_6aqxij_kMYqrlRxrf3vZfiBobcOKsf-G9KCK_xK7a9QtrusoXIbVFzDGuZL5VSzVisgKJDWftkXf8Ccgw2VOdeUPE6QnP2_ISSVOwVs5HVL20fkeIo-HktXX_6"/>
-<button class="absolute bottom-2 right-2 flex h-10 w-10 items-center justify-center rounded-full bg-primary text-white opacity-0 shadow-xl group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all">
-<span class="material-symbols-outlined fill-1">play_arrow</span>
-</button>
-</div>
-<h3 class="font-bold text-sm">Daily Mix 2</h3>
-<p class="text-xs text-slate-500 line-clamp-2">Kendrick Lamar, J. Cole and others.</p>
-</div>
-<div class="flex min-w-[160px] flex-col gap-2 rounded-xl bg-slate-200/20 dark:bg-slate-800/20 p-3 hover:bg-slate-200/40 dark:hover:bg-slate-800/40 transition-colors cursor-pointer group">
-<div class="relative aspect-square w-full overflow-hidden rounded-lg shadow-lg">
-<img class="h-full w-full object-cover" data-alt="Gradient background with smooth transitions" src="https://lh3.googleusercontent.com/aida-public/AB6AXuChH7ibdq_fYFMU9rL4s7FfgennrKyLp5kniIfkv3B77wtUBGALM6-HNS8cz3vbaAAPkC8JDLLjMBRhW8ZDZQ72W6J9-5yS9AJxEzCQqGAD3-dMXVYryU4nc0-kdcL3Y8LR-o4R8fDhJ1SkWo-Q25yh3tKvF7zzsTkfyZY971CdrWikCurp_jY8B0ebwX3VLNMTxZti4_pBtVZffr_DHdpKvRZeP6xwfvHfjvXh4o1MlrqEVOc-45Z7aOR2pW9j58zzAJm75F0W"/>
-<button class="absolute bottom-2 right-2 flex h-10 w-10 items-center justify-center rounded-full bg-primary text-white opacity-0 shadow-xl group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all">
-<span class="material-symbols-outlined fill-1">play_arrow</span>
-</button>
-</div>
-<h3 class="font-bold text-sm">Daily Mix 3</h3>
-<p class="text-xs text-slate-500 line-clamp-2">Electronic vibes to start your day.</p>
-</div>
-</div>
-</section>
-<!-- Your Top Mixes -->
-<section class="mt-8">
-<div class="flex items-center justify-between px-4 mb-4">
-<h2 class="text-xl font-bold">Your Top Mixes</h2>
-</div>
-<div class="no-scrollbar flex gap-4 overflow-x-auto px-4">
-<div class="flex min-w-[140px] flex-col gap-2 cursor-pointer">
-<div class="relative aspect-square w-full overflow-hidden rounded-lg border-b-4 border-primary">
-<img class="h-full w-full object-cover" data-alt="Vinyl record spinning on a player" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRzR0zSG7GtT506aKNg85_WCSnJOzdcEt6IKwk019EEQ5AB7hvXBkqOOilTPSh_5sx-9RuDxyloPevFZqh6AeqAKK0g7ceLxou7iDpEnnO2gFiNzDAyTYH0UivLl2ztcqF_fVah2da4hzqzAivMbvQ9sYvLhoJaJ97foOOtOSb2ngFN6xTtH1E4wDCwQVxcpxLvXmeS3h1J_h1dP6zpyMlPK5rCVEcM7bWuDXqG1ZXeyEBE7_Spl2axDfEMPMWHUETzLWTAfBF"/>
-<div class="absolute inset-0 bg-black/20"></div>
-<div class="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/80 to-transparent">
-<p class="text-xs font-bold text-white uppercase tracking-widest">Chill Mix</p>
-</div>
-</div>
-</div>
-<div class="flex min-w-[140px] flex-col gap-2 cursor-pointer">
-<div class="relative aspect-square w-full overflow-hidden rounded-lg border-b-4 border-amber-500">
-<img class="h-full w-full object-cover" data-alt="Pop artist performing on stage" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhd6SJ8E5cbOFCpi9ZAYO9OFt6QQz7Zgt3zKVU3u8cvkMXhB9rn25VDsb1aKzKmgSrkV1g_cmrtp3D84ozD1MxuGJgmDvkMfKBZzfC6We030JmRSX-pEOruRxvknAcrknxfRiWm0vSNXPjzcA_mvcrGG5IAQoaYeXwOyy5e2adegdqlN1ZUihZGb_NpWZ5HSOm7FXyvc19ybYLC52WBtQMS5joHaFTDREDAX1fSOjohmEzWfRNDILCSweDhQiNE2mhsYU9z_qv"/>
-<div class="absolute inset-0 bg-black/20"></div>
-<div class="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/80 to-transparent">
-<p class="text-xs font-bold text-white uppercase tracking-widest">Pop Mix</p>
-</div>
-</div>
-</div>
-<div class="flex min-w-[140px] flex-col gap-2 cursor-pointer">
-<div class="relative aspect-square w-full overflow-hidden rounded-lg border-b-4 border-blue-500">
-<img class="h-full w-full object-cover" data-alt="Grand piano in a dark room" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAhxSqZZl-fTq-VC_FPDtA7ZvMhrK1DcYPEmVvIdo7Gv9HkJa9oAnYGN8auFZe4kazFqZR3gagRDmCWDk8kqWYSTfYdefSWye7rZEWNArUi6GxiqsIZsNZZwkGWo3GxksAy_5D3-86omqJ2IXrna6QzltwnnZgbMknjX8NAztI4Y-bkph-gQ5ORHIOLyK6hg5LytHCQGmJJ_kxX-lwMG2kXX6BFDU6pgHyK4brnm4NVHxINsJ4Da3lsSZ6tDiLZIHf5Hv66DOAZ"/>
-<div class="absolute inset-0 bg-black/20"></div>
-<div class="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/80 to-transparent">
-<p class="text-xs font-bold text-white uppercase tracking-widest">Jazz Mix</p>
-</div>
-</div>
-</div>
-<div class="flex min-w-[140px] flex-col gap-2 cursor-pointer">
-<div class="relative aspect-square w-full overflow-hidden rounded-lg border-b-4 border-red-500">
-<img class="h-full w-full object-cover" data-alt="Electric guitar amplifier" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCij1ml4Q_VD-oESJAbnTxWePyosZhkCIYpd8HIC4PBX2aCcDMs2AGKa6tELaVUtVAOovVZ15B8bY1iyZXiefNq7vVSg3yAZcLBtMHDIOnKqcXe7u-WfcNVX7S_P4cz2B0rm-eack1bx2-qg1IOd7nLXGnQJMtrygu2UD60TtPmZLWfF1fCJTEspEBjbEWvE7g7C7dVxbxrdqYV7pcmw90E8RQPppUmNZemEYmKU29DULny2tkDg95pX6rEYD9bP9IoF9biTzre"/>
-<div class="absolute inset-0 bg-black/20"></div>
-<div class="absolute inset-x-0 bottom-0 p-2 bg-gradient-to-t from-black/80 to-transparent">
-<p class="text-xs font-bold text-white uppercase tracking-widest">Rock Mix</p>
-</div>
-</div>
-</div>
-</div>
-</section>
-</main>
-<!-- Bottom Navigation Bar -->
-<nav class="fixed bottom-0 left-0 right-0 z-20 border-t border-slate-200/10 dark:border-slate-800 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-lg">
-<div class="flex h-16 items-center justify-around px-2">
-<a class="flex flex-1 flex-col items-center justify-center gap-0.5 text-slate-900 dark:text-slate-100" href="#">
-<span class="material-symbols-outlined text-2xl font-variation-fill-1">home</span>
-<span class="text-[10px] font-medium">Home</span>
-</a>
-<a class="flex flex-1 flex-col items-center justify-center gap-0.5 text-slate-500 dark:text-slate-400 hover:text-primary transition-colors" href="#">
-<span class="material-symbols-outlined text-2xl">search</span>
-<span class="text-[10px] font-medium">Search</span>
-</a>
-<a class="flex flex-1 flex-col items-center justify-center gap-0.5 text-slate-500 dark:text-slate-400 hover:text-primary transition-colors" href="#">
-<span class="material-symbols-outlined text-2xl">library_music</span>
-<span class="text-[10px] font-medium">Your Library</span>
-</a>
-<a class="flex flex-1 flex-col items-center justify-center gap-0.5 text-slate-500 dark:text-slate-400 hover:text-primary transition-colors" href="#">
-<span class="material-symbols-outlined text-2xl">workspace_premium</span>
-<span class="text-[10px] font-medium">Premium</span>
-</a>
-</div>
-<!-- Safe area for mobile devices -->
-<div class="h-4"></div>
-</nav>
-<!-- Mini Player Floating -->
-<div class="fixed bottom-[4.5rem] left-2 right-2 z-20 mx-auto max-w-lg overflow-hidden rounded-lg shadow-2xl bg-slate-900">
-<div class="flex items-center gap-3 p-2">
-<div class="h-10 w-10 overflow-hidden rounded shadow">
-<img class="h-full w-full object-cover" data-alt="Mini album thumbnail" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCt3dqLJS2SRySGLe9MDjgxPEw3ICJohsJMAIE2PCxMavhP9rBr0UDcsqSCQP-Se3Sj4jPlYR7ssCX09vMoWl41QPdFbEs_nLu6AJWoTcNGwuYve7zBEJFkbBNyggGlECQPngqDQ5cF456XQ_MXn0kKuGyE1YYIVXxEcaG2sDVbI0yRgkdnsUVYN5DAeWRK6mmOfjrFRVPqFdyBnI0rKmTgUTX6N90xc1cfqr-PxlusKzfKDROdzkcpfHfFM_E-doEUZ_LlL9g6"/>
-</div>
-<div class="flex-1 overflow-hidden">
-<h4 class="truncate text-xs font-bold text-white">Midnight City</h4>
-<p class="truncate text-[10px] text-slate-400">M83</p>
-</div>
-<div class="flex items-center gap-2 pr-2">
-<button class="flex h-8 w-8 items-center justify-center text-white">
-<span class="material-symbols-outlined">devices</span>
-</button>
-<button class="flex h-8 w-8 items-center justify-center text-white">
-<span class="material-symbols-outlined fill-1">play_arrow</span>
-</button>
-</div>
-</div>
-<!-- Progress bar -->
-<div class="h-0.5 w-full bg-slate-700">
-<div class="h-full w-1/3 bg-primary"></div>
-</div>
-</div>
-</div>
-</body></html>
-<div id="homePage">
 
-<h2 class="text-xl font-bold p-4">Recently Played</h2>
+<body class="bg-black text-white">
 
-<div id="recentSongs" class="grid grid-cols-2 gap-4 p-4"></div>
+<div class="p-4">
+
+<h1 class="text-2xl font-bold">Spotify Web</h1>
 
 </div>
 
-<div id="searchPage" class="hidden">
+<!-- PLAYER -->
 
-<input id="searchInput" placeholder="Search music..." class="w-full p-3 bg-gray-900 text-white"/>
+<div class="p-4">
+
+<h2 id="songTitle">No song</h2>
+
+<button id="playBtn">Play</button>
+<button id="nextBtn">Next</button>
+<button id="prevBtn">Prev</button>
+
+</div>
+
+<!-- SEARCH -->
+
+<div class="p-4">
+
+<input id="searchInput" placeholder="Search music..." class="text-black p-2 w-full">
 
 <div id="searchResults"></div>
 
 </div>
 
-<div id="libraryPage" class="hidden">
+<!-- LIBRARY -->
 
-<h2 class="text-xl font-bold p-4">Your Library</h2>
+<div class="p-4">
 
-<div id="playlist"></div>
+<h2>Your Library</h2>
+
+<div id="library"></div>
 
 </div>
+
+<!-- UPLOAD -->
+
+<div class="p-4">
+
+<input type="file" id="uploadMusic" accept="audio/*" multiple>
+
+</div>
+
+<audio id="audioPlayer"></audio>
+
+<script src="player.js"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
