@@ -1,67 +1,121 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Music Player</title>
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 
-<script src="https://cdn.tailwindcss.com"></script>
+<style>
+@keyframes rotate-slow{
+from{transform:rotate(0deg);}
+to{transform:rotate(360deg);}
+}
 
-<title>Spotify Clone</title>
+.play{
+animation:rotate-slow 20s linear infinite;
+}
 
+body{
+background:#020617;
+color:white;
+font-family:sans-serif;
+}
+
+.seek-bar::-webkit-slider-thumb{
+-webkit-appearance:none;
+height:12px;
+width:12px;
+border-radius:50%;
+background:#3b82f6;
+cursor:pointer;
+}
+</style>
 </head>
 
-<body class="bg-black text-white">
+<body class="flex items-center justify-center min-h-screen">
 
-<div class="p-4">
+<main class="relative w-full max-w-[390px] h-[844px] bg-slate-950 flex flex-col overflow-hidden shadow-2xl border border-slate-800 rounded-[3rem]">
 
-<h1 class="text-2xl font-bold">Spotify Web</h1>
+<header class="px-8 pt-12 pb-6 flex items-center justify-between">
+<button>←</button>
+<h1 class="text-sm font-semibold uppercase">Now Playing</h1>
+<button>⋮</button>
+</header>
+
+
+<!-- Album -->
+
+<section class="flex-1 flex items-center justify-center px-8">
+
+<div class="relative w-72 h-72">
+
+<div id="box-disk" class="w-full h-full rounded-full border-4 border-slate-800 overflow-hidden bg-cover bg-center">
+</div>
 
 </div>
 
-<!-- PLAYER -->
+</section>
 
-<div class="p-4">
 
-<h2 id="songTitle">No song</h2>
+<!-- Song info -->
 
-<button id="playBtn">Play</button>
-<button id="nextBtn">Next</button>
-<button id="prevBtn">Prev</button>
+<section class="px-8 text-center">
 
-</div>
+<h2 class="song-name text-2xl font-bold mb-1">Song name</h2>
 
-<!-- SEARCH -->
+<p class="artist text-blue-400">Artist</p>
 
-<div class="p-4">
+</section>
 
-<input id="searchInput" placeholder="Search music..." class="text-black p-2 w-full">
 
-<div id="searchResults"></div>
+<!-- Progress -->
 
-</div>
+<section class="px-8 pt-8">
 
-<!-- LIBRARY -->
+<input id="seekbar" type="range" value="0" min="0"
+class="seek-bar w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer">
 
-<div class="p-4">
+<div class="flex justify-between text-xs text-gray-400 mt-2">
 
-<h2>Your Library</h2>
+<span class="current-time">00:00</span>
 
-<div id="library"></div>
+<span class="music-time">00:00</span>
 
 </div>
 
-<!-- UPLOAD -->
+</section>
 
-<div class="p-4">
 
-<input type="file" id="uploadMusic" accept="audio/*" multiple>
+<!-- Controls -->
+
+<section class="px-8 pt-10 pb-16">
+
+<div class="flex items-center justify-center space-x-10">
+
+<button id="btnback">⏮</button>
+
+<button id="play-pause-btn"
+class="btn-play w-16 h-16 rounded-full bg-blue-600 flex items-center justify-center">
+
+▶
+
+</button>
+
+<button id="btnnext">⏭</button>
 
 </div>
 
-<audio id="audioPlayer"></audio>
+</section>
 
-<script src="player.js"></script>
-<script src="app.js"></script>
+<audio id="audio"></audio>
+
+</main>
+
+
+<script src="song.js"></script>
+<script src="script.js"></script>
 
 </body>
 </html>
