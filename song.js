@@ -1,13 +1,13 @@
 const songs = [
     {
         title: "Peaches",
-        artist: "Echo System",
+        artist: "Justin Bieber",
         audio: "music/song1.mp3",
         cover: "images/image1.jpg"
     },
     {
         title: "Consume",
-        artist: "Neon Sky",
+        artist: "Chase Atlantic",
         audio: "music/song2.mp3",
         cover: "images/image2.jpg"
     },
