@@ -68,7 +68,8 @@
 <div class="absolute inset-0 rounded-full bg-blue-500/20 blur-3xl scale-110"></div>
 <!-- Rotating Album Art -->
 <div class="w-full h-full rounded-full border-4 border-slate-800/50 shadow-2xl overflow-hidden animate-spin-slow p-1" id="album-art">
-<div class="w-full h-full rounded-full bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAkivWKatc8nO8t-Q5_CzPikKNGbi_3XQcL_9nZk2DIoW2TPLofHo3bz3WNBfdukQzTEhTNozwYjVkRYbkQZzsOOYikFL0gsK2rlxeWzkTp9hw4ojtMSKBFB1JJTS_NWHPI9W8ZX9M1oq7N8_amYAxajklTkq77qseqZPTKwDdW5ztD_fHySHBIEJQ1GjrxSq4yRu9xQwOdKHoNZ_R5tQFY3hBTtb9YvfQjxtFjP8D_qmvbEBuljjkc57bIwtPUXcKFvtvZ9O1-BKE');">
+<div id="cover-image" class="w-full h-full rounded-full bg-cover bg-center"
+style="background-image: url('images/image1.jpg');">
 <!-- Center hole for vinyl record look -->
 <div class="absolute inset-0 flex items-center justify-center">
 <div class="w-12 h-12 bg-slate-950 rounded-full border-4 border-slate-800/80 shadow-inner flex items-center justify-center">
@@ -176,7 +177,8 @@
       songTitle.textContent = song.title;
       songArtist.textContent = song.artist;
       audio.src = song.audio;
-      albumArt.querySelector('div').style.backgroundImage = `url('${song.cover}')`;
+      const coverImage = document.getElementById("cover-image");
+coverImage.style.backgroundImage = `url('${song.cover}')`;
     }
 
     function playSong() {
