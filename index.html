@@ -136,93 +136,124 @@
 </main>
 <!-- END: Mobile Container -->
 <!-- BEGIN: Logic -->
-<script data-purpose="toggle-playback">const playPauseBtn = document.getElementById('play-pause-btn');
+<script data-purpose="toggle-playback">const audio = new Audio();
+    const playPauseBtn = document.getElementById('play-pause-btn');
     const playIcon = document.getElementById('play-icon');
     const pauseIcon = document.getElementById('pause-icon');
     const albumArt = document.getElementById('album-art');
     const progressSlider = document.querySelector('[data-purpose="progress-slider"]');
     const currentTimeEl = progressSlider.nextElementSibling.firstElementChild;
+    const totalTimeEl = progressSlider.nextElementSibling.lastElementChild;
     const songTitle = document.querySelector('h2');
     const songArtist = document.querySelector('p.text-blue-400');
     const nextBtn = document.querySelector('[aria-label="Next Track"]');
     const prevBtn = document.querySelector('[aria-label="Previous Track"]');
-    
-    let isPlaying = true;
-    let progressInterval;
 
     const songs = [
       {
         title: 'Midnight Pulse',
         artist: 'Echo System',
-        cover: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAkivWKatc8nO8t-Q5_CzPikKNGbi_3XQcL_9nZk2DIoW2TPLofHo3bz3WNBfdukQzTEhTNozwYjVkRYbkQZzsOOYikFL0gsK2rlxeWzkTp9hw4ojtMSKBFB1JJTS_NWHPI9W8ZX9M1oq7N8_amYAxajklTkq77qseqZPTKwDdW5ztD_fHySHBIEJQ1GjrxSq4yRu9xQwOdKHoNZ_R5tQFY3hBTtb9YvfQjxtFjP8D_qmvbEBuljjkc57bIwtPUXcKFvtvZ9O1-BKE'
+        cover: 'images/image1.jpg',
+        audio: 'music/song1.mp3'
       },
       {
-        title: 'Starboy',
-        artist: 'The Weeknd',
-        cover: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAkivWKatc8nO8t-Q5_CzPikKNGbi_3XQcL_9nZk2DIoW2TPLofHo3bz3WNBfdukQzTEhTNozwYjVkRYbkQZzsOOYikFL0gsK2rlxeWzkTp9hw4ojtMSKBFB1JJTS_NWHPI9W8ZX9M1oq7N8_amYAxajklTkq77qseqZPTKwDdW5ztD_fHySHBIEJQ1GjrxSq4yRu9xQwOdKHoNZ_R5tQFY3hBTtb9YvfQjxtFjP8D_qmvbEBuljjkc57bIwtPUXcKFvtvZ9O1-BKE'
+        title: 'Neon Horizon',
+        artist: 'Synthwave Drifter',
+        cover: 'images/image2.jpg',
+        audio: 'music/song2.mp3'
+      },
+      {
+        title: 'Deep Echoes',
+        artist: 'Submersible',
+        cover: 'images/image3.jpg',
+        audio: 'music/song3.mp3'
       }
     ];
-    let currentSongIndex = 0;
 
-    function updateProgress() {
-      if (isPlaying && progressSlider.value < 100) {
-        progressSlider.value = parseFloat(progressSlider.value) + 0.1;
-        // Basic time simulation (4:05 total = 245s)
-        const totalSeconds = 245;
-        const currentSecs = Math.floor((progressSlider.value / 100) * totalSeconds);
-        const mins = Math.floor(currentSecs / 60);
-        const secs = String(currentSecs % 60).padStart(2, '0');
-        currentTimeEl.textContent = `${mins}:${secs}`;
-      }
-    }
+    let songIndex = 0;
 
-    function togglePlay() {
-      isPlaying = !isPlaying;
-      if (isPlaying) {
-        playIcon.classList.add('hidden');
-        pauseIcon.classList.remove('hidden');
-        albumArt.classList.remove('pause-animation');
-        progressInterval = setInterval(updateProgress, 100);
-      } else {
-        playIcon.classList.remove('hidden');
-        pauseIcon.classList.add('hidden');
-        albumArt.classList.add('pause-animation');
-        clearInterval(progressInterval);
-      }
-    }
-
-    function changeSong() {
-      currentSongIndex = (currentSongIndex + 1) % songs.length;
-      const song = songs[currentSongIndex];
+    function loadSong(song) {
       songTitle.textContent = song.title;
       songArtist.textContent = song.artist;
+      audio.src = song.audio;
       albumArt.querySelector('div').style.backgroundImage = `url('${song.cover}')`;
-      progressSlider.value = 0;
-      currentTimeEl.textContent = '0:00';
     }
 
-    playPauseBtn.addEventListener('click', togglePlay);
-    nextBtn.addEventListener('click', () => { 
-      nextBtn.classList.add('scale-90');
-      setTimeout(() => nextBtn.classList.remove('scale-90'), 100);
-      changeSong(); 
-    });
-    prevBtn.addEventListener('click', () => { 
-      prevBtn.classList.add('scale-90');
-      setTimeout(() => prevBtn.classList.remove('scale-90'), 100);
-      changeSong(); 
+    function playSong() {
+      audio.play();
+      playIcon.classList.add('hidden');
+      pauseIcon.classList.remove('hidden');
+      albumArt.classList.remove('pause-animation');
+    }
+
+    function pauseSong() {
+      audio.pause();
+      playIcon.classList.remove('hidden');
+      pauseIcon.classList.add('hidden');
+      albumArt.classList.add('pause-animation');
+    }
+
+    function prevSong() {
+      songIndex--;
+      if (songIndex < 0) songIndex = songs.length - 1;
+      loadSong(songs[songIndex]);
+      playSong();
+    }
+
+    function nextSong() {
+      songIndex++;
+      if (songIndex > songs.length - 1) songIndex = 0;
+      loadSong(songs[songIndex]);
+      playSong();
+    }
+
+    function updateProgress(e) {
+      const { duration, currentTime } = e.srcElement;
+      if (duration) {
+        const progressPercent = (currentTime / duration) * 100;
+        progressSlider.value = progressPercent;
+        
+        // Update time displays
+        currentTimeEl.textContent = formatTime(currentTime);
+        totalTimeEl.textContent = formatTime(duration);
+      }
+    }
+
+    function setProgress(e) {
+      const width = this.clientWidth;
+      const clickX = e.offsetX;
+      const duration = audio.duration;
+      audio.currentTime = (progressSlider.value / 100) * duration;
+    }
+
+    function formatTime(time) {
+      const min = Math.floor(time / 60);
+      const sec = Math.floor(time % 60);
+      return `${min}:${sec < 10 ? '0' + sec : sec}`;
+    }
+
+    // Event Listeners
+    playPauseBtn.addEventListener('click', () => {
+      const isPlaying = !audio.paused;
+      if (isPlaying) {
+        pauseSong();
+      } else {
+        playSong();
+      }
     });
 
+    nextBtn.addEventListener('click', nextSong);
+    prevBtn.addEventListener('click', prevSong);
+    audio.addEventListener('timeupdate', updateProgress);
+    audio.addEventListener('ended', nextSong);
     progressSlider.addEventListener('input', () => {
-      // Allow user to seek
-      const totalSeconds = 245;
-      const currentSecs = Math.floor((progressSlider.value / 100) * totalSeconds);
-      const mins = Math.floor(currentSecs / 60);
-      const secs = String(currentSecs % 60).padStart(2, '0');
-      currentTimeEl.textContent = `${mins}:${secs}`;
+      const duration = audio.duration;
+      audio.currentTime = (progressSlider.value / 100) * duration;
     });
 
-    // Start interval on load since isPlaying defaults to true
-    progressInterval = setInterval(updateProgress, 100);</script>
+    // Initial Load
+    loadSong(songs[songIndex]);
+    // Start with animation paused until play
+    albumArt.classList.add('pause-animation');</script>
 <!-- END: Logic -->
 </body></html>
