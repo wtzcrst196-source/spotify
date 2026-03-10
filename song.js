@@ -21,6 +21,6 @@ const songs = [
         title: "Next Door",
         artist: "Stellar",
         audio: "music/song4.mp3",
-        cover: "images/1.jpg"
+        cover: "images/1.jpeg"
     }
 ];
