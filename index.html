@@ -102,14 +102,14 @@
 <svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="m16 3 5 5-5 5"></path><path d="M3 21v-2a4 4 0 0 1 4-4h5"></path><path d="m5 16-3-3 3-3"></path><path d="M21 16v5h-11"></path></svg>
 </button>
 <div class="flex items-center space-x-8">
-<button aria-label="Previous Track" class="text-white hover:text-blue-400 transition-colors">
+<button aria-label="Previous Track" class="text-white hover:text-blue-400 transition-colors transition-transform">
 <svg fill="currentColor" height="28" stroke="none" viewbox="0 0 24 24" width="28" xmlns="http://www.w3.org/2000/svg"><path d="M19 20V4l-11 8 11 8zm-8-8L19 4V20l-8-8zm-2 8V4H7v16h2z"></path></svg>
 </button>
 <button aria-label="Play/Pause" class="w-20 h-20 flex items-center justify-center rounded-full bg-blue-600 text-white shadow-lg shadow-blue-900/40 hover:scale-105 active:scale-95 transition-all" id="play-pause-btn">
 <svg class="hidden ml-1" fill="currentColor" height="32" id="play-icon" viewbox="0 0 24 24" width="32" xmlns="http://www.w3.org/2000/svg"><path d="m7 4 12 8-12 8V4z"></path></svg>
 <svg fill="currentColor" height="32" id="pause-icon" viewbox="0 0 24 24" width="32" xmlns="http://www.w3.org/2000/svg"><rect height="16" rx="1" width="4" x="6" y="4"></rect><rect height="16" rx="1" width="4" x="14" y="4"></rect></svg>
 </button>
-<button aria-label="Next Track" class="text-white hover:text-blue-400 transition-colors">
+<button aria-label="Next Track" class="text-white hover:text-blue-400 transition-colors transition-transform">
 <svg fill="currentColor" height="28" stroke="none" viewbox="0 0 24 24" width="28" xmlns="http://www.w3.org/2000/svg"><path d="M5 4v16l11-8-11-8zm8 8-8 8V4l8 8zm2 8V4h2v16h-2z"></path></svg>
 </button>
 </div>
@@ -136,29 +136,93 @@
 </main>
 <!-- END: Mobile Container -->
 <!-- BEGIN: Logic -->
-<script data-purpose="toggle-playback">
-    const playPauseBtn = document.getElementById('play-pause-btn');
+<script data-purpose="toggle-playback">const playPauseBtn = document.getElementById('play-pause-btn');
     const playIcon = document.getElementById('play-icon');
     const pauseIcon = document.getElementById('pause-icon');
     const albumArt = document.getElementById('album-art');
+    const progressSlider = document.querySelector('[data-purpose="progress-slider"]');
+    const currentTimeEl = progressSlider.nextElementSibling.firstElementChild;
+    const songTitle = document.querySelector('h2');
+    const songArtist = document.querySelector('p.text-blue-400');
+    const nextBtn = document.querySelector('[aria-label="Next Track"]');
+    const prevBtn = document.querySelector('[aria-label="Previous Track"]');
     
     let isPlaying = true;
+    let progressInterval;
 
-    playPauseBtn.addEventListener('click', () => {
+    const songs = [
+      {
+        title: 'Midnight Pulse',
+        artist: 'Echo System',
+        cover: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAkivWKatc8nO8t-Q5_CzPikKNGbi_3XQcL_9nZk2DIoW2TPLofHo3bz3WNBfdukQzTEhTNozwYjVkRYbkQZzsOOYikFL0gsK2rlxeWzkTp9hw4ojtMSKBFB1JJTS_NWHPI9W8ZX9M1oq7N8_amYAxajklTkq77qseqZPTKwDdW5ztD_fHySHBIEJQ1GjrxSq4yRu9xQwOdKHoNZ_R5tQFY3hBTtb9YvfQjxtFjP8D_qmvbEBuljjkc57bIwtPUXcKFvtvZ9O1-BKE'
+      },
+      {
+        title: 'Starboy',
+        artist: 'The Weeknd',
+        cover: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAkivWKatc8nO8t-Q5_CzPikKNGbi_3XQcL_9nZk2DIoW2TPLofHo3bz3WNBfdukQzTEhTNozwYjVkRYbkQZzsOOYikFL0gsK2rlxeWzkTp9hw4ojtMSKBFB1JJTS_NWHPI9W8ZX9M1oq7N8_amYAxajklTkq77qseqZPTKwDdW5ztD_fHySHBIEJQ1GjrxSq4yRu9xQwOdKHoNZ_R5tQFY3hBTtb9YvfQjxtFjP8D_qmvbEBuljjkc57bIwtPUXcKFvtvZ9O1-BKE'
+      }
+    ];
+    let currentSongIndex = 0;
+
+    function updateProgress() {
+      if (isPlaying && progressSlider.value < 100) {
+        progressSlider.value = parseFloat(progressSlider.value) + 0.1;
+        // Basic time simulation (4:05 total = 245s)
+        const totalSeconds = 245;
+        const currentSecs = Math.floor((progressSlider.value / 100) * totalSeconds);
+        const mins = Math.floor(currentSecs / 60);
+        const secs = String(currentSecs % 60).padStart(2, '0');
+        currentTimeEl.textContent = `${mins}:${secs}`;
+      }
+    }
+
+    function togglePlay() {
       isPlaying = !isPlaying;
-      
       if (isPlaying) {
         playIcon.classList.add('hidden');
         pauseIcon.classList.remove('hidden');
         albumArt.classList.remove('pause-animation');
+        progressInterval = setInterval(updateProgress, 100);
       } else {
         playIcon.classList.remove('hidden');
         pauseIcon.classList.add('hidden');
         albumArt.classList.add('pause-animation');
+        clearInterval(progressInterval);
       }
+    }
+
+    function changeSong() {
+      currentSongIndex = (currentSongIndex + 1) % songs.length;
+      const song = songs[currentSongIndex];
+      songTitle.textContent = song.title;
+      songArtist.textContent = song.artist;
+      albumArt.querySelector('div').style.backgroundImage = `url('${song.cover}')`;
+      progressSlider.value = 0;
+      currentTimeEl.textContent = '0:00';
+    }
+
+    playPauseBtn.addEventListener('click', togglePlay);
+    nextBtn.addEventListener('click', () => { 
+      nextBtn.classList.add('scale-90');
+      setTimeout(() => nextBtn.classList.remove('scale-90'), 100);
+      changeSong(); 
     });
-  </script>
+    prevBtn.addEventListener('click', () => { 
+      prevBtn.classList.add('scale-90');
+      setTimeout(() => prevBtn.classList.remove('scale-90'), 100);
+      changeSong(); 
+    });
+
+    progressSlider.addEventListener('input', () => {
+      // Allow user to seek
+      const totalSeconds = 245;
+      const currentSecs = Math.floor((progressSlider.value / 100) * totalSeconds);
+      const mins = Math.floor(currentSecs / 60);
+      const secs = String(currentSecs % 60).padStart(2, '0');
+      currentTimeEl.textContent = `${mins}:${secs}`;
+    });
+
+    // Start interval on load since isPlaying defaults to true
+    progressInterval = setInterval(updateProgress, 100);</script>
 <!-- END: Logic -->
-<script src="song.js"></script>
-<script src="Jscript.js"></script>
 </body></html>
