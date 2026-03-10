@@ -137,6 +137,7 @@ style="background-image: url('images/image1.jpg');">
 </main>
 <!-- END: Mobile Container -->
 <!-- BEGIN: Logic -->
+<script src="song.js"></script>
 <script data-purpose="toggle-playback">const audio = new Audio();
     const playPauseBtn = document.getElementById('play-pause-btn');
     const playIcon = document.getElementById('play-icon');
@@ -150,26 +151,7 @@ style="background-image: url('images/image1.jpg');">
     const nextBtn = document.querySelector('[aria-label="Next Track"]');
     const prevBtn = document.querySelector('[aria-label="Previous Track"]');
 
-    const songs = [
-      {
-        title: 'Midnight Pulse',
-        artist: 'Echo System',
-        cover: 'images/image1.jpg',
-        audio: 'music/song1.mp3'
-      },
-      {
-        title: 'Neon Horizon',
-        artist: 'Synthwave Drifter',
-        cover: 'images/image2.jpg',
-        audio: 'music/song2.mp3'
-      },
-      {
-        title: 'Deep Echoes',
-        artist: 'Submersible',
-        cover: 'images/image3.jpg',
-        audio: 'music/song3.mp3'
-      }
-    ];
+    
 
     let songIndex = 0;
 
