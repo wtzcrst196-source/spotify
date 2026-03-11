@@ -1,252 +1,292 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Midnight Pulse - Interactive Player</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#0a0e17',
+                            surface: '#151b29',
+                            primary: '#3b82f6',
+                            secondary: '#60a5fa',
+                            accent: '#2563eb'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @keyframes rotate-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .animate-spin-slow {
+            animation: rotate-slow 20s linear infinite;
+        }
+        .pause-animation {
+            animation-play-state: paused;
+        }
+        body {
+            background-color: #020617;
+            color: #f8fafc;
+            font-family: -apple-system, sans-serif;
+            overflow: hidden;
+        }
+        .glass-effect {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+        }
+        input[type='range']::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 12px; width: 12px;
+            border-radius: 50%;
+            background: #3b82f6;
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+        }
 
-<html lang="en"><head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Now Playing - Midnight Pulse</title>
-<!-- BEGIN: External Scripts -->
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<!-- END: External Scripts -->
-<style data-purpose="custom-animations">
-    @keyframes rotate-slow {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-    .animate-spin-slow {
-      animation: rotate-slow 20s linear infinite;
-    }
-    .pause-animation {
-      animation-play-state: paused;
-    }
-  </style>
-<style data-purpose="layout-styles">
-    body {
-      background-color: #020617; /* Slate 950 */
-      color: #f8fafc;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      overflow: hidden;
-    }
-    .glass-effect {
-      background: rgba(30, 41, 59, 0.7);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-    }
-    /* Simple custom slider styling for mobile feel */
-    input[type='range']::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      height: 12px;
-      width: 12px;
-      border-radius: 50%;
-      background: #3b82f6;
-      cursor: pointer;
-      box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
-    }
-  </style>
+        /* UPLOAD OVERLAY STYLES */
+        #upload-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            z-index: 100;
+            display: flex;
+            align-items: flex-end;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            transition: opacity 0.4s ease, visibility 0.4s;
+        }
+        .overlay-hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .overlay-visible {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+        #upload-container {
+            width: 100%;
+            max-width: 390px;
+            margin: 0 auto;
+            background: #0a0e17;
+            border-top-left-radius: 2.5rem;
+            border-top-right-radius: 2.5rem;
+            transform: translateY(100%);
+            transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+            overflow: hidden;
+            height: 90vh;
+        }
+        .overlay-visible #upload-container {
+            transform: translateY(0);
+        }
+        .dashed-border {
+            background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='16' ry='16' stroke='%233B82F6FF' stroke-width='2' stroke-dasharray='8%2c 12' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+            border-radius: 16px;
+        }
+    </style>
 </head>
 <body class="flex items-center justify-center min-h-screen">
-<!-- BEGIN: Mobile Container -->
-<main class="relative w-full max-w-[390px] h-[844px] bg-slate-950 flex flex-col overflow-hidden shadow-2xl border border-slate-800 rounded-[3rem]">
-<!-- BEGIN: Background Gradient Glows -->
-<div class="absolute -top-24 -left-24 w-64 h-64 bg-blue-900/30 rounded-full blur-[100px]"></div>
-<div class="absolute -bottom-24 -right-24 w-64 h-64 bg-indigo-900/30 rounded-full blur-[100px]"></div>
-<!-- END: Background Gradient Glows -->
-<!-- BEGIN: Header -->
-<header class="z-10 px-8 pt-12 pb-6 flex items-center justify-between">
-<button aria-label="Go back" class="p-2 rounded-full hover:bg-slate-800 transition-colors">
-<svg fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="m15 18-6-6 6-6"></path></svg>
-</button>
-<h1 class="text-sm font-semibold tracking-wider uppercase opacity-80">Now Playing</h1>
-<button aria-label="More options" class="p-2 rounded-full hover:bg-slate-800 transition-colors">
-<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="1"></circle><circle cx="12" cy="5" r="1"></circle><circle cx="12" cy="19" r="1"></circle></svg>
-</button>
-</header>
-<!-- END: Header -->
-<!-- BEGIN: Album Art Section -->
-<section class="flex-1 flex items-center justify-center px-8" data-purpose="album-art-container">
-<div class="relative w-72 h-72">
-<!-- Glow effect behind disk -->
-<div class="absolute inset-0 rounded-full bg-blue-500/20 blur-3xl scale-110"></div>
-<!-- Rotating Album Art -->
-<div class="w-full h-full rounded-full border-4 border-slate-800/50 shadow-2xl overflow-hidden animate-spin-slow p-1" id="album-art">
-<div class="w-full h-full rounded-full bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAkivWKatc8nO8t-Q5_CzPikKNGbi_3XQcL_9nZk2DIoW2TPLofHo3bz3WNBfdukQzTEhTNozwYjVkRYbkQZzsOOYikFL0gsK2rlxeWzkTp9hw4ojtMSKBFB1JJTS_NWHPI9W8ZX9M1oq7N8_amYAxajklTkq77qseqZPTKwDdW5ztD_fHySHBIEJQ1GjrxSq4yRu9xQwOdKHoNZ_R5tQFY3hBTtb9YvfQjxtFjP8D_qmvbEBuljjkc57bIwtPUXcKFvtvZ9O1-BKE');">
-<!-- Center hole for vinyl record look -->
-<div class="absolute inset-0 flex items-center justify-center">
-<div class="w-12 h-12 bg-slate-950 rounded-full border-4 border-slate-800/80 shadow-inner flex items-center justify-center">
-<div class="w-2 h-2 bg-blue-500 rounded-full"></div>
-</div>
-</div>
-</div>
-</div>
-</div>
-</section>
-<!-- END: Album Art Section -->
-<!-- BEGIN: Song Info Section -->
-<section class="z-10 px-8 text-center mt-4">
-<h2 class="text-2xl font-bold tracking-tight text-white mb-1">Midnight Pulse</h2>
-<p class="text-blue-400 font-medium">Echo System</p>
-</section>
-<!-- END: Song Info Section -->
-<!-- BEGIN: Controls Section -->
-<section class="z-10 px-8 pt-10 pb-16 flex flex-col space-y-8" data-purpose="playback-controls">
-<!-- Progress Bar Container -->
-<div class="space-y-2">
-<input class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-500" data-purpose="progress-slider" max="100" min="0" type="range" value="35"/>
-<div class="flex justify-between text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-<span>1:42</span>
-<span>4:05</span>
-</div>
-</div>
-<!-- Main Playback Buttons -->
-<div class="flex items-center justify-between px-4">
-<button aria-label="Shuffle" class="text-slate-400 hover:text-white transition-colors">
-<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="m16 3 5 5-5 5"></path><path d="M3 21v-2a4 4 0 0 1 4-4h5"></path><path d="m5 16-3-3 3-3"></path><path d="M21 16v5h-11"></path></svg>
-</button>
-<div class="flex items-center space-x-8">
-<button aria-label="Previous Track" class="text-white hover:text-blue-400 transition-colors transition-transform">
-<svg fill="currentColor" height="28" stroke="none" viewbox="0 0 24 24" width="28" xmlns="http://www.w3.org/2000/svg"><path d="M19 20V4l-11 8 11 8zm-8-8L19 4V20l-8-8zm-2 8V4H7v16h2z"></path></svg>
-</button>
-<button aria-label="Play/Pause" class="w-20 h-20 flex items-center justify-center rounded-full bg-blue-600 text-white shadow-lg shadow-blue-900/40 hover:scale-105 active:scale-95 transition-all" id="play-pause-btn">
-<svg class="hidden ml-1" fill="currentColor" height="32" id="play-icon" viewbox="0 0 24 24" width="32" xmlns="http://www.w3.org/2000/svg"><path d="m7 4 12 8-12 8V4z"></path></svg>
-<svg fill="currentColor" height="32" id="pause-icon" viewbox="0 0 24 24" width="32" xmlns="http://www.w3.org/2000/svg"><rect height="16" rx="1" width="4" x="6" y="4"></rect><rect height="16" rx="1" width="4" x="14" y="4"></rect></svg>
-</button>
-<button aria-label="Next Track" class="text-white hover:text-blue-400 transition-colors transition-transform">
-<svg fill="currentColor" height="28" stroke="none" viewbox="0 0 24 24" width="28" xmlns="http://www.w3.org/2000/svg"><path d="M5 4v16l11-8-11-8zm8 8-8 8V4l8 8zm2 8V4h2v16h-2z"></path></svg>
-</button>
-</div>
-<button aria-label="Repeat" class="text-slate-400 hover:text-white transition-colors">
-<svg fill="none" height="20" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="20" xmlns="http://www.w3.org/2000/svg"><path d="m17 2 4 4-4 4"></path><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><path d="m7 22-4-4 4-4"></path><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
-</button>
-</div>
-<!-- Secondary Controls -->
-<div class="flex items-center justify-center space-x-10 text-slate-500 pt-4">
-<button aria-label="Add to favorites" class="hover:text-blue-400 transition-colors">
-<svg fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="22" xmlns="http://www.w3.org/2000/svg"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path></svg>
-</button>
-<button aria-label="Lyrics" class="hover:text-blue-400 transition-colors">
-<svg fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="22" xmlns="http://www.w3.org/2000/svg"><path d="M11 5H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-5"></path><path d="M15 13a3 3 0 0 0 3-3V5a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2h-2a2 2 0 0 0-2 2v4"></path><circle cx="12" cy="12" r="3"></circle></svg>
-</button>
-<button aria-label="Share" class="hover:text-blue-400 transition-colors">
-<svg fill="none" height="22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="22" xmlns="http://www.w3.org/2000/svg"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path><polyline points="16 6 12 2 8 6"></polyline><line x1="12" x2="12" y1="2" y2="15"></line></svg>
-</button>
-</div>
-</section>
-<!-- END: Controls Section -->
-<!-- Home Indicator (iOS style) -->
-<div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-slate-800 rounded-full"></div>
-</main>
-<!-- END: Mobile Container -->
-<!-- BEGIN: Logic -->
-<script src="song.js"></script>  
-<script data-purpose="toggle-playback">const audio = new Audio();
-    const playPauseBtn = document.getElementById('play-pause-btn');
-    const playIcon = document.getElementById('play-icon');
-    const pauseIcon = document.getElementById('pause-icon');
-    const albumArt = document.getElementById('album-art');
-    const progressSlider = document.querySelector('[data-purpose="progress-slider"]');
-    const currentTimeEl = progressSlider.nextElementSibling.firstElementChild;
-    const totalTimeEl = progressSlider.nextElementSibling.lastElementChild;
-    const songTitle = document.querySelector('h2');
-    const songArtist = document.querySelector('p.text-blue-400');
-    const nextBtn = document.querySelector('[aria-label="Next Track"]');
-    const prevBtn = document.querySelector('[aria-label="Previous Track"]');
 
-    
+    <!-- MAIN PLAYER -->
+    <main class="relative w-full max-w-[390px] h-[844px] bg-slate-950 flex flex-col overflow-hidden shadow-2xl border border-slate-800 rounded-[3rem]">
+        <div class="absolute -top-24 -left-24 w-64 h-64 bg-blue-900/30 rounded-full blur-[100px]"></div>
+        <div class="absolute -bottom-24 -right-24 w-64 h-64 bg-indigo-900/30 rounded-full blur-[100px]"></div>
 
-    let songIndex = 0;
-    audio.currentTime = 0
-    function loadSong(song) {
-  songTitle.textContent = song.title;
-  songArtist.textContent = song.artist;
-  audio.src = song.audio;
-  albumArt.querySelector('div').style.backgroundImage = `url('${song.cover}')`;
+        <header class="z-10 px-8 pt-12 pb-6 flex items-center justify-between">
+            <button class="p-2 rounded-full hover:bg-slate-800 transition-colors">
+                <svg fill="none" height="24" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="24"><path d="m15 18-6-6 6-6"></path></svg>
+            </button>
+            <h1 class="text-sm font-semibold tracking-wider uppercase opacity-80">Now Playing</h1>
+            <button id="open-upload-btn" class="p-2 rounded-full bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 transition-all">
+                <svg fill="none" height="20" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="20"><path d="M12 5v14M5 12h14"></path></svg>
+            </button>
+        </header>
 
-  if ('mediaSession' in navigator) {
-    navigator.mediaSession.metadata = new MediaMetadata({
-      title: song.title,
-      artist: song.artist,
-      album: "Now Playing",
-      artwork: [
-        { src: song.cover, sizes: "512x512", type: "image/png" }
-      ]
-    });
-  }
-}
+        <section class="flex-1 flex items-center justify-center px-8">
+            <div class="relative w-72 h-72">
+                <div class="absolute inset-0 rounded-full bg-blue-500/20 blur-3xl scale-110"></div>
+                <div class="w-full h-full rounded-full border-4 border-slate-800/50 shadow-2xl overflow-hidden animate-spin-slow p-1" id="album-art">
+                    <div class="w-full h-full rounded-full bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAkivWKatc8nO8t-Q5_CzPikKNGbi_3XQcL_9nZk2DIoW2TPLofHo3bz3WNBfdukQzTEhTNozwYjVkRYbkQZzsOOYikFL0gsK2rlxeWzkTp9hw4ojtMSKBFB1JJTS_NWHPI9W8ZX9M1oq7N8_amYAxajklTkq77qseqZPTKwDdW5ztD_fHySHBIEJQ1GjrxSq4yRu9xQwOdKHoNZ_R5tQFY3hBTtb9YvfQjxtFjP8D_qmvbEBuljjkc57bIwtPUXcKFvtvZ9O1-BKE');">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="w-12 h-12 bg-slate-950 rounded-full border-4 border-slate-800/80 shadow-inner flex items-center justify-center">
+                                <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-    function playSong() {
-      audio.play();
-      playIcon.classList.add('hidden');
-      pauseIcon.classList.remove('hidden');
-      albumArt.classList.remove('pause-animation');
-    }
+        <section class="z-10 px-8 text-center mt-4">
+            <h2 class="text-2xl font-bold tracking-tight text-white mb-1">Midnight Pulse</h2>
+            <p class="text-blue-400 font-medium">Echo System</p>
+        </section>
 
-    function pauseSong() {
-      audio.pause();
-      playIcon.classList.remove('hidden');
-      pauseIcon.classList.add('hidden');
-      albumArt.classList.add('pause-animation');
-    }
+        <section class="z-10 px-8 pt-10 pb-16 flex flex-col space-y-8">
+            <div class="space-y-2">
+                <input class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-blue-500" max="100" min="0" type="range" value="35"/>
+                <div class="flex justify-between text-[10px] font-bold text-slate-500 uppercase tracking-widest">
+                    <span>1:42</span>
+                    <span>4:05</span>
+                </div>
+            </div>
+            <div class="flex items-center justify-between px-4">
+                <button class="text-slate-400 hover:text-white transition-colors">
+                    <svg fill="none" height="20" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="20"><path d="m16 3 5 5-5 5"></path><path d="M3 21v-2a4 4 0 0 1 4-4h5"></path><path d="m5 16-3-3 3-3"></path><path d="M21 16v5h-11"></path></svg>
+                </button>
+                <div class="flex items-center space-x-8">
+                    <button class="text-white hover:text-blue-400 transition-transform"><svg fill="currentColor" height="28" viewbox="0 0 24 24" width="28"><path d="M19 20V4l-11 8 11 8zm-8-8L19 4V20l-8-8zm-2 8V4H7v16h2z"></path></svg></button>
+                    <button id="play-pause-btn" class="w-20 h-20 flex items-center justify-center rounded-full bg-blue-600 text-white shadow-lg hover:scale-105 active:scale-95 transition-all">
+                        <svg class="hidden ml-1" id="play-icon" fill="currentColor" height="32" viewbox="0 0 24 24" width="32"><path d="m7 4 12 8-12 8V4z"></path></svg>
+                        <svg id="pause-icon" fill="currentColor" height="32" viewbox="0 0 24 24" width="32"><rect height="16" rx="1" width="4" x="6" y="4"></rect><rect height="16" rx="1" width="4" x="14" y="4"></rect></svg>
+                    </button>
+                    <button class="text-white hover:text-blue-400 transition-transform"><svg fill="currentColor" height="28" viewbox="0 0 24 24" width="28"><path d="M5 4v16l11-8-11-8zm8 8-8 8V4l8 8zm2 8V4h2v16h-2z"></path></svg></button>
+                </div>
+                <button class="text-slate-400 hover:text-white transition-colors">
+                    <svg fill="none" height="20" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="20"><path d="m17 2 4 4-4 4"></path><path d="M3 11V9a4 4 0 0 1 4-4h14"></path><path d="m7 22-4-4 4-4"></path><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
+                </button>
+            </div>
+            <div class="flex justify-center pt-4">
+                <button id="nav-upload-trigger" class="flex flex-col items-center gap-1 text-blue-500">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    <span class="text-[10px] font-bold uppercase">Upload</span>
+                </button>
+            </div>
+        </section>
+        <div class="absolute bottom-2 left-1/2 -translate-x-1/2 w-32 h-1.5 bg-slate-800 rounded-full"></div>
+    </main>
 
-    function prevSong() {
-      songIndex--;
-      if (songIndex < 0) songIndex = songs.length - 1;
-      loadSong(songs[songIndex]);
-      playSong();
-    }
+    <!-- UPLOAD OVERLAY (Integrated Code) -->
+    <div id="upload-overlay" class="overlay-hidden">
+        <div id="upload-container">
+            <div class="flex justify-end p-6">
+                <button id="close-upload" class="p-2 text-slate-400 hover:text-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div class="px-6 pb-12 overflow-y-auto h-full">
+                <header class="mb-10 text-center">
+                    <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-600">Upload Your Track</h1>
+                    <p class="text-slate-400 mt-2 text-sm">Share your sound with the world</p>
+                </header>
+                
+                <section class="mb-8">
+                    <label class="block text-sm font-semibold text-blue-400 mb-3 uppercase tracking-wider">Cover Artwork</label>
+                    <div class="relative group cursor-pointer">
+                        <div class="dashed-border w-full aspect-square flex flex-col items-center justify-center transition-all hover:bg-blue-500/10 group-active:scale-95">
+                            <div class="w-16 h-16 bg-blue-500/20 rounded-full flex items-center justify-center mb-4">
+                                <svg class="h-8 w-8 text-brand-primary" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                            </div>
+                            <p class="text-blue-100 font-medium" id="cover-status">Add Cover Image</p>
+                        </div>
+                        <input id="cover-input" accept="image/*" class="absolute inset-0 opacity-0 cursor-pointer" type="file"/>
+                    </div>
+                </section>
 
-    function nextSong() {
-      songIndex++;
-      if (songIndex > songs.length - 1) songIndex = 0;
-      loadSong(songs[songIndex]);
-      playSong();
-    }
+                <section class="mb-10">
+                    <label class="block text-sm font-semibold text-blue-400 mb-3 uppercase tracking-wider">Audio File</label>
+                    <div class="relative">
+                        <button class="w-full bg-brand-primary hover:bg-brand-accent text-white font-bold py-4 rounded-2xl flex items-center justify-center gap-3 transition-all active:scale-95">
+                            <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path></svg>
+                            <span id="audio-status">Upload Audio File</span>
+                        </button>
+                        <input id="audio-input" accept="audio/*" class="absolute inset-0 opacity-0 cursor-pointer" type="file"/>
+                    </div>
+                </section>
 
-    function updateProgress(e) {
-      const { duration, currentTime } = e.srcElement;
-      if (duration) {
-        const progressPercent = (currentTime / duration) * 100;
-        progressSlider.value = progressPercent;
+                <button id="final-upload-btn" class="w-full bg-slate-800 text-slate-400 py-4 rounded-2xl font-bold uppercase tracking-widest border border-slate-700 mb-10">Process Upload</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // PLAYER LOGIC (from your code)
+        const audio = new Audio();
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const playIcon = document.getElementById('play-icon');
+        const pauseIcon = document.getElementById('pause-icon');
+        const albumArt = document.getElementById('album-art');
         
-        // Update time displays
-        currentTimeEl.textContent = formatTime(currentTime);
-        totalTimeEl.textContent = formatTime(duration);
-      }
-    }
+        // Placeholder for songs (needs your songs.js)
+        const songs = [
+            { title: "Midnight Pulse", artist: "Echo System", cover: "https://lh3.googleusercontent.com/aida-public/AB6AXuAkivWKatc8nO8t-Q5_CzPikKNGbi_3XQcL_9nZk2DIoW2TPLofHo3bz3WNBfdukQzTEhTNozwYjVkRYbkQZzsOOYikFL0gsK2rlxeWzkTp9hw4ojtMSKBFB1JJTS_NWHPI9W8ZX9M1oq7N8_amYAxajklTkq77qseqZPTKwDdW5ztD_fHySHBIEJQ1GjrxSq4yRu9xQwOdKHoNZ_R5tQFY3hBTtb9YvfQjxtFjP8D_qmvbEBuljjkc57bIwtPUXcKFvtvZ9O1-BKE", audio: "" }
+        ];
 
-    function setProgress(e) {
-      const width = this.clientWidth;
-      const clickX = e.offsetX;
-      const duration = audio.duration;
-      audio.currentTime = (progressSlider.value / 100) * duration;
-    }
+        function playSong() {
+            audio.play().catch(e => console.log("Audio play failed"));
+            playIcon.classList.add('hidden');
+            pauseIcon.classList.remove('hidden');
+            albumArt.classList.remove('pause-animation');
+        }
+        function pauseSong() {
+            audio.pause();
+            playIcon.classList.remove('hidden');
+            pauseIcon.classList.add('hidden');
+            albumArt.classList.add('pause-animation');
+        }
 
-    function formatTime(time) {
-      const min = Math.floor(time / 60);
-      const sec = Math.floor(time % 60);
-      return `${min}:${sec < 10 ? '0' + sec : sec}`;
-    }
+        playPauseBtn.addEventListener('click', () => audio.paused ? playSong() : pauseSong());
+        albumArt.classList.add('pause-animation');
 
-    // Event Listeners
-    playPauseBtn.addEventListener('click', () => {
-      const isPlaying = !audio.paused;
-      if (isPlaying) {
-        pauseSong();
-      } else {
-        playSong();
-      }
-    });
+        // UPLOAD LOGIC & ANIMATION
+        const overlay = document.getElementById('upload-overlay');
+        const openBtn = document.getElementById('open-upload-btn');
+        const navTrigger = document.getElementById('nav-upload-trigger');
+        const closeBtn = document.getElementById('close-upload');
 
-    nextBtn.addEventListener('click', nextSong);
-    prevBtn.addEventListener('click', prevSong);
-    audio.addEventListener('timeupdate', updateProgress);
-    audio.addEventListener('ended', nextSong);
-    progressSlider.addEventListener('input', () => {
-      const duration = audio.duration;
-      audio.currentTime = (progressSlider.value / 100) * duration;
-    });
+        const toggleUpload = (show) => {
+            if(show) {
+                overlay.classList.remove('overlay-hidden');
+                overlay.classList.add('overlay-visible');
+            } else {
+                overlay.classList.remove('overlay-visible');
+                overlay.classList.add('overlay-hidden');
+            }
+        };
 
-    // Initial Load
-    loadSong(songs[songIndex]);
-    // Start with animation paused until play
-    albumArt.classList.add('pause-animation');</script>
-<!-- END: Logic -->
-</body></html>
+        openBtn.addEventListener('click', () => toggleUpload(true));
+        navTrigger.addEventListener('click', () => toggleUpload(true));
+        closeBtn.addEventListener('click', () => toggleUpload(false));
+        overlay.addEventListener('click', (e) => e.target === overlay && toggleUpload(false));
+
+        // File Selection Feedback
+        const coverInput = document.getElementById('cover-input');
+        const audioInput = document.getElementById('audio-input');
+        const coverStatus = document.getElementById('cover-status');
+        const audioStatus = document.getElementById('audio-status');
+        const finalBtn = document.getElementById('final-upload-btn');
+
+        coverInput.addEventListener('change', (e) => {
+            if(e.target.files[0]) {
+                coverStatus.textContent = "Image: " + e.target.files[0].name;
+                coverStatus.classList.add('text-green-400');
+                checkInputs();
+            }
+        });
+
+        audioInput.addEventListener('change', (e) => {
+            if(e.target.files[0]) {
+                audioStatus.textContent = "Audio: " + e.target.files[0].name;
+                finalBtn.classList.remove('bg-slate-800', 'text-slate-400');
+                finalBtn.classList.add('bg-blue-600', 'text-white');
+                checkInputs();
+            }
+        });
+
+        function checkInputs() {
+            if(coverInput.files[0] && audioInput.files[0]) {
+                finalBtn.textContent = "Ready to Upload!";
+            }
+        }
+    </script>
+</body>
+</html>
