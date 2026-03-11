@@ -155,11 +155,22 @@
     let songIndex = 0;
     audio.currentTime = 0
     function loadSong(song) {
-      songTitle.textContent = song.title;
-      songArtist.textContent = song.artist;
-      audio.src = song.audio;
-      albumArt.querySelector('div').style.backgroundImage = `url('${song.cover}')`;
-    }
+  songTitle.textContent = song.title;
+  songArtist.textContent = song.artist;
+  audio.src = song.audio;
+  albumArt.querySelector('div').style.backgroundImage = `url('${song.cover}')`;
+
+  if ('mediaSession' in navigator) {
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: song.title,
+      artist: song.artist,
+      album: "Now Playing",
+      artwork: [
+        { src: song.cover, sizes: "512x512", type: "image/png" }
+      ]
+    });
+  }
+}
 
     function playSong() {
       audio.play();
