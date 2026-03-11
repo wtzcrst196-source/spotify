@@ -13,13 +13,13 @@ const songs = [
     },
     {
         title: "Intension",
-        artist: "Horizon",
+        artist: "Justin Bieber & Quavo",
         audio: "music/song3.mp3",
         cover: "images/IMG_0894.jpeg"
     },
     {
         title: "Next Door",
-        artist: "Stellar",
+        artist: "ASTN & Amelia Moore",
         audio: "music/song4.mp3",
         cover: "images/1.jpeg"
     }
