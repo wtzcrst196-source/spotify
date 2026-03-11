@@ -317,10 +317,13 @@
         let repeatMode = 0; // 0: None, 1: All, 2: One
         let currentSongIndex = 0;
 
-        const songs = [
-            { title: "Midnight Pulse", artist: "Echo System", cover: "https://lh3.googleusercontent.com/aida-public/AB6AXuAkivWKatc8nO8t-Q5_CzPikKNGbi_3XQcL_9nZk2DIoW2TPLofHo3bz3WNBfdukQzTEhTNozwYjVkRYbkQZzsOOYikFL0gsK2rlxeWzkTp9hw4ojtMSKBFB1JJTS_NWHPI9W8ZX9M1oq7N8_amYAxajklTkq77qseqZPTKwDdW5ztD_fHySHBIEJQ1GjrxSq4yRu9xQwOdKHoNZ_R5tQFY3hBTtb9YvfQjxtFjP8D_qmvbEBuljjkc57bIwtPUXcKFvtvZ9O1-BKE", audio: "" },
-            { title: "Neon Drift", artist: "Synth Wave", cover: "https://lh3.googleusercontent.com/aida-public/AB6AXuAkivWKatc8nO8t-Q5_CzPikKNGbi_3XQcL_9nZk2DIoW2TPLofHo3bz3WNBfdukQzTEhTNozwYjVkRYbkQZzsOOYikFL0gsK2rlxeWzkTp9hw4ojtMSKBFB1JJTS_NWHPI9W8ZX9M1oq7N8_amYAxajklTkq77qseqZPTKwDdW5ztD_fHySHBIEJQ1GjrxSq4yRu9xQwOdKHoNZ_R5tQFY3hBTtb9YvfQjxtFjP8D_qmvbEBuljjkc57bIwtPUXcKFvtvZ9O1-BKE", audio: "" }
-        ];
+        let songIndex = 0;
+    audio.currentTime = 0
+    function loadSong(song) {
+  songTitle.textContent = song.title;
+  songArtist.textContent = song.artist;
+  audio.src = song.audio;
+  albumArt.querySelector('div').style.backgroundImage = `url('${song.cover}')`;
 
         function playSong() {
             audio.play().catch(e => console.log("Audio play failed"));
