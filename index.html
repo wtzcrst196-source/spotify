@@ -192,10 +192,31 @@
     }
 
     function nextSong() {
+
+  // repeat 1 bài
+  if (repeatMode === 2) {
+    audio.currentTime = 0;
+    playSong();
+    return;
+  }
+
+  // shuffle
   if (isShuffle) {
     songIndex = Math.floor(Math.random() * songs.length);
   } else {
-    songIndex = (songIndex + 1) % songs.length;
+    songIndex++;
+  }
+
+  // hết playlist
+  if (songIndex >= songs.length) {
+
+    if (repeatMode === 1) {
+      songIndex = 0; // repeat all
+    } else {
+      pauseSong(); // stop nếu repeat off
+      return;
+    }
+
   }
 
   loadSong(songs[songIndex]);
