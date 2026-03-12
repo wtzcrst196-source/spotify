@@ -192,22 +192,15 @@
     }
 
     function nextSong() {
-            if (repeatMode === 2) {
-                // Repeat One
-                audio.currentTime = 0;
-            } else if (isShuffle) {
-                songIndex = Math.floor(Math.random() * songs.length);
-            } else {
-                songIndex = (songIndex + 1) % songs.length;
-                if (songIndex === 0 && repeatMode === 0) {
-                    pauseSong();
-                    return;
-                }
-            }
-            // Since we don't have actual URLs for other songs, we just restart or stay on current for demo
-            audio.currentTime = 0;
-            playSong();
-        }
+  if (isShuffle) {
+    songIndex = Math.floor(Math.random() * songs.length);
+  } else {
+    songIndex = (songIndex + 1) % songs.length;
+  }
+
+  loadSong(songs[songIndex]);
+  playSong();
+}
      // Shuffle Toggle
         shuffleBtn.addEventListener('click', () => {
             isShuffle = !isShuffle;
