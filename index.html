@@ -196,10 +196,10 @@
                 // Repeat One
                 audio.currentTime = 0;
             } else if (isShuffle) {
-                SongIndex = Math.floor(Math.random() * songs.length);
+                songIndex = Math.floor(Math.random() * songs.length);
             } else {
-                SongIndex = (SongIndex + 1) % songs.length;
-                if (SongIndex === 0 && repeatMode === 0) {
+                songIndex = (songIndex + 1) % songs.length;
+                if (songIndex === 0 && repeatMode === 0) {
                     pauseSong();
                     return;
                 }
