@@ -140,6 +140,13 @@
     const songArtist = document.querySelector('p.text-blue-400');
     const nextBtn = document.querySelector('[aria-label="Next Track"]');
     const prevBtn = document.querySelector('[aria-label="Previous Track"]');
+    const shuffleBtn = document.getElementById('shuffle-btn');
+        const repeatBtn = document.getElementById('repeat-btn');
+        const repeatBadge = document.getElementById('repeat-badge');
+        
+        let isShuffle = false;
+        let repeatMode = 0; // 0: None, 1: All, 2: One
+    
 
     
 
@@ -185,11 +192,43 @@
     }
 
     function nextSong() {
-      songIndex++;
-      if (songIndex > songs.length - 1) songIndex = 0;
-      loadSong(songs[songIndex]);
-      playSong();
-    }
+            if (repeatMode === 2) {
+                // Repeat One
+                audio.currentTime = 0;
+            } else if (isShuffle) {
+                currentSongIndex = Math.floor(Math.random() * songs.length);
+            } else {
+                currentSongIndex = (currentSongIndex + 1) % songs.length;
+                if (currentSongIndex === 0 && repeatMode === 0) {
+                    pauseSong();
+                    return;
+                }
+            }
+            // Since we don't have actual URLs for other songs, we just restart or stay on current for demo
+            audio.currentTime = 0;
+            playSong();
+        }
+     // Shuffle Toggle
+        shuffleBtn.addEventListener('click', () => {
+            isShuffle = !isShuffle;
+            shuffleBtn.classList.toggle('text-blue-500', isShuffle);
+            shuffleBtn.classList.toggle('text-slate-400', !isShuffle);
+        });
+
+        // Repeat Cycles
+        repeatBtn.addEventListener('click', () => {
+            repeatMode = (repeatMode + 1) % 3;
+            if (repeatMode === 0) {
+                repeatBtn.classList.replace('text-blue-500', 'text-slate-400');
+                repeatBadge.classList.add('hidden');
+            } else if (repeatMode === 1) {
+                repeatBtn.classList.replace('text-slate-400', 'text-blue-500');
+                repeatBadge.classList.add('hidden');
+            } else if (repeatMode === 2) {
+                repeatBadge.classList.remove('hidden');
+            }
+        });
+
 
     function updateProgress(e) {
       const { duration, currentTime } = e.srcElement;
