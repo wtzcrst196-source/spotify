@@ -193,27 +193,35 @@
 
     function nextSong() {
 
-  // repeat 1 bài
+  // Repeat one
   if (repeatMode === 2) {
     audio.currentTime = 0;
     playSong();
     return;
   }
 
-  // shuffle
+  // Shuffle
   if (isShuffle) {
-    songIndex = Math.floor(Math.random() * songs.length);
+
+    let newIndex;
+
+    do {
+      newIndex = Math.floor(Math.random() * songs.length);
+    } while (newIndex === songIndex && songs.length > 1);
+
+    songIndex = newIndex;
+
   } else {
     songIndex++;
   }
 
-  // hết playlist
+  // End playlist
   if (songIndex >= songs.length) {
 
     if (repeatMode === 1) {
       songIndex = 0; // repeat all
     } else {
-      pauseSong(); // stop nếu repeat off
+      pauseSong();
       return;
     }
 
